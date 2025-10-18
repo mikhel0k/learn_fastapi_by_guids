@@ -1,12 +1,15 @@
 from fastapi import FastAPI
 from pydantic import EmailStr, BaseModel
+
 import uvicorn
 
+from items_views import router as items_router
+from users.views import router as users_router
+
 app = FastAPI()
+app.include_router(items_router)
+app.include_router(users_router)
 
-
-class User(BaseModel):
-    email: EmailStr
 
 
 @app.get("/")
@@ -24,46 +27,12 @@ def hello(name: str = "World"):
     }
 
 
-@app.post("/users/")
-def create_user(user: User):
-    return {
-        "message": "success",
-        "user": user.email,
-    }
-
-
-@app.get("/items/")
-def list_items():
-    return [
-        "Item 1",
-        "Item 2",
-        "Item 3",
-    ]
-
-
 @app.post("/calk/")
 def add(a: int, b: int):
     return {
         'a': a,
         'b': b,
         'result': a+b,
-    }
-
-
-@app.get("/items/latest/")
-def get_last_item():
-    return {
-        "last_item": {
-            "id": 0,
-            "name": "item_name",
-        },
-    }
-
-
-@app.get("/items/{item_id}/")
-def get_item_by_id(item_id: int):
-    return {
-        "item_id": item_id,
     }
 
 
